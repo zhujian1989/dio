@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/src/CancelToken.dart';
-import 'package:dio/src/FormData.dart';
 import 'package:dio/src/DioError.dart';
+import 'package:dio/src/FormData.dart';
 import 'package:dio/src/Interceptor.dart';
 import 'package:dio/src/Options.dart';
 import 'package:dio/src/Response.dart';
@@ -400,7 +401,12 @@ class Dio {
 
       response = await _listenCancelForAsyncTask(
           cancelToken, request.close());
-      cookieJar.saveFromResponse(uri, response.cookies);
+
+      try {
+        cookieJar.saveFromResponse(uri, response.cookies);
+      } catch (ex) {
+        print(ex);
+      }
 
       var retData = await _listenCancelForAsyncTask(cancelToken,
           transformer.transformResponse(options, response));
